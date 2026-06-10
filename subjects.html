@@ -226,7 +226,7 @@ async function fetchTeacherMap(ids){
 if(!ids||!ids.length)return{};
 try{
 const unique=[...new Set(ids)].join(',');
-const data=await pw(`/pw-api/v1/users/get-user-details-list?userIds=${unique}`);
+const data=await pw(`https://api.penpencil.co/v1/users/get-user-details-list?userIds=${unique}`);
 const map={};
 (data.data||[]).forEach(u=>{map[u._id]={name:u.name||`${u.firstName||''} ${u.lastName||''}`.trim(),img:u.imageId?(u.imageId.baseUrl+u.imageId.key):''};});
 return map;
@@ -272,7 +272,7 @@ async function loadSchedule(){
 const row=document.getElementById('sched-row');
 try{
 
-const data=await pw(`/pw-api/v1/batches/${BATCH_ID}/todays-schedule`);
+const data=await pw(`https://api.penpencil.co/v1/batches/${BATCH_ID}/todays-schedule`);
 row.innerHTML='';
 if(!data.success||!data.data?.length){
 row.innerHTML='<p style="font-style:italic;color:#94a3b8;padding:12px 0;font-size:13px">No classes scheduled for today.</p>';
@@ -363,7 +363,7 @@ if(subjectsLoaded)return;subjectsLoaded=true;
 showSubjSkels();
 const list=document.getElementById('subj-list');
 try{
-const data=await pw(`/pw-api/v3/batches/${BATCH_ID}/details`);
+const data=await pw(`https://api.penpencil.co/v3/batches/${BATCH_ID}/details`);
 list.innerHTML='';
 if(!data.success){list.innerHTML='<li style="text-align:center;padding:40px;color:#64748b">Failed to load subjects</li>';return;}
 const subs=data.data?.subjects||[];
@@ -390,7 +390,7 @@ return;
 }
 list.innerHTML='<div class="skel" style="height:clamp(76px,20vw,110px);border-radius:14px"></div>';
 try{
-const data=await pw(`/pw-api/v2/programs/${khazanaId}/filters?page=1&limit=20`);
+const data=await pw(`https://api.penpencil.co/v2/programs/${khazanaId}/filters?page=1&limit=20`);
 const khName=data.data?.name||'Khazana';
 list.innerHTML='';
 const li=document.createElement('li');li.className='subj-item';
@@ -416,7 +416,7 @@ if(testsLoaded||testsLoading)return;testsLoading=true;
 const root=document.getElementById('tests-root');
 {const n=Math.max(3,Math.floor((window.innerHeight-200)/130));root.innerHTML=Array(n).fill('<div class="skel" style="height:120px;border-radius:14px;margin-bottom:12px"></div>').join('');}
 try{
-const filters=await pw(`/pw-api/v3/test-service/tests/filters?batchId=${BATCH_ID}`);
+const filters=await pw(`https://api.penpencil.co/v3/test-service/tests/filters?batchId=${BATCH_ID}`);
 if(!filters.success){root.innerHTML=ndH('Failed to load tests');return;}
 const catSecs=(filters.data?.categorySections||[]).flatMap(c=>c.sections||[]);
 if(!catSecs.length){root.innerHTML=ndH('No Tests Available');return;}
@@ -434,12 +434,12 @@ async function loadSectionTests(secId,type){
 if(type==='objective'){
 if(loadedObjSections[secId]!==undefined)return;
 loadedObjSections[secId]=null;
-try{const r=await pw(`/pw-api/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=false`);loadedObjSections[secId]=(r.data||[]).map(t=>mkT(t,false));}
+try{const r=await pw(`https://api.penpencil.co/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=false`);loadedObjSections[secId]=(r.data||[]).map(t=>mkT(t,false));}
 catch{loadedObjSections[secId]=[];}
 }else{
 if(loadedSubSections[secId]!==undefined)return;
 loadedSubSections[secId]=null;
-try{const r=await pw(`/pw-api/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=true`);loadedSubSections[secId]=(r.data||[]).map(t=>mkT(t,true));}
+try{const r=await pw(`https://api.penpencil.co/v3/test-service/tests?categorySectionId=${secId}&batchId=${BATCH_ID}&isSubjective=true`);loadedSubSections[secId]=(r.data||[]).map(t=>mkT(t,true));}
 catch{loadedSubSections[secId]=[];}
 }
 }
@@ -530,7 +530,7 @@ document.getElementById('syl-langs').style.display='none';
 document.getElementById('syl-content').innerHTML='<div class="syl-loading">Loading syllabus...</div>';
 document.getElementById('syl-modal').classList.add('open');
 try{
-const data=await pw(`/pw-api/v3/test-service/tests/${tid}/instructions`);
+const data=await pw(`https://api.penpencil.co/v3/test-service/tests/${tid}/instructions`);
 const d=data.data||{};
 sylData=parseSyl(d.syllabus||{});
 sylLangs=(d.languageCodes||[]).map(l=>({code:l.code.toLowerCase(),label:l.code.toUpperCase()})).filter(l=>sylData[l.code]);
@@ -558,7 +558,7 @@ if(annLoading||annDone)return;annLoading=true;
 const list=document.getElementById('ann-list');
 if(page===1){const n=Math.max(3,Math.floor((window.innerHeight-200)/100));list.innerHTML=Array(n).fill('<div class="skel" style="height:90px;border-radius:12px;margin-bottom:12px"></div>').join('');}
 try{
-const data=await pw(`/pw-api/v1/batches/${BATCH_ID}/announcement?page=${page}`);
+const data=await pw(`https://api.penpencil.co/v1/batches/${BATCH_ID}/announcement?page=${page}`);
 if(page===1)list.innerHTML='';
 if(data.success&&data.data?.length){
 data.data.forEach(item=>{

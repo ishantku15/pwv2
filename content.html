@@ -72,7 +72,7 @@ async function loadPage(){
     if(page===1){showSkels(list);}
     else{showSkels(lsk);lsk.style.display='block';}
     try{
-        const data=await pw(`/pw-api/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/topics?page=${page}`);
+        const data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/topics?page=${page}`);
         lsk.style.display='none';lsk.innerHTML='';
         if(page===1)list.innerHTML='';
         if(!data.success||!data.data?.length){

@@ -160,9 +160,10 @@ function buildVideoItem(item){
     const name=item.topic||vd.name||'';
     const done=getC()[id_]?'done':'';
     const href=`/schedule-details?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(id_)}&tap=video`;
+    const itemStr = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
     const li=document.createElement('li');
     li.className='content-item';
-    li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', decodeURIComponent('${encodeURIComponent(JSON.stringify(item))}'))">
+    li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', '${itemStr}')">
         <div class="thumb-box"><img data-src="${esc(thumb)||'/static/site_thumbnail.png'}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E" alt="" class="lazy-img" onerror="this.src='/static/site_thumbnail.png'"></div>
         <div class="content-details">
             <div class="content-name">${esc(name)}</div>
@@ -184,9 +185,10 @@ function buildNoteItems(item, isDpp){
             for(let i=0;i<hwIdx;i++) gIdx+=(item.homeworkIds[i].attachmentIds||[]).length;
             gIdx+=attIdx;
             const href=`/schedule-details?batchId=${ep(BATCH_ID)}&subjectId=${ep(SUBJECT_ID)}&scheduleId=${ep(item._id)}&tap=note&noteIndex=${gIdx}&isDpp=${isDpp?'true':'false'}`;
+            const itemStr = encodeURIComponent(JSON.stringify(item)).replace(/'/g, "%27");
             const li=document.createElement('li');
             li.className='content-item';
-            li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', decodeURIComponent('${encodeURIComponent(JSON.stringify(item))}'))">
+            li.innerHTML=`<a class="content-link" href="${esc(href)}" onclick="localStorage.setItem('asm_current_item', '${itemStr}')">
                 <div class="pdf-box">ðŸ“„</div>
                 <div class="content-details">
                     <div class="content-name">${esc(name)}</div>
@@ -231,9 +233,9 @@ async function loadContent(tab, page){
     try{
         let data;
         if(isDpp){
-            data=await pw(`/pw-api/v3/test-service/tests/dpp?batchId=${BATCH_ID}&batchSubjectId=${SUBJECT_ID}&chapterId=${CHAPTER_ID}&isSubjective=false&page=${page}`);
+            data=await pw(`https://api.penpencil.co/v3/test-service/tests/dpp?batchId=${BATCH_ID}&batchSubjectId=${SUBJECT_ID}&chapterId=${CHAPTER_ID}&isSubjective=false&page=${page}`);
         } else {
-            data=await pw(`/pw-api/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents?page=${page}&contentType=${tab}&tag=${CHAPTER_ID}`);
+            data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents?page=${page}&contentType=${tab}&tag=${CHAPTER_ID}`);
         }
 
         removeBottomSkels(panel);
