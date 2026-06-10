@@ -233,9 +233,9 @@ async function loadContent(tab, page){
     try{
         let data;
         if(isDpp){
-            data=await pw(`https://api.penpencil.co/v3/test-service/tests/dpp?batchId=${BATCH_ID}&batchSubjectId=${SUBJECT_ID}&chapterId=${CHAPTER_ID}&isSubjective=false&page=${page}`);
+            data=await pw(`/pw-api/v3/test-service/tests/dpp?batchId=${BATCH_ID}&batchSubjectId=${SUBJECT_ID}&chapterId=${CHAPTER_ID}&isSubjective=false&page=${page}`);
         } else {
-            data=await pw(`https://api.penpencil.co/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents?page=${page}&contentType=${tab}&tag=${CHAPTER_ID}`);
+            data=await pw(`/pw-api/v2/batches/${BATCH_ID}/subject/${SUBJECT_ID}/contents?page=${page}&contentType=${tab}&tag=${CHAPTER_ID}`);
         }
 
         removeBottomSkels(panel);
